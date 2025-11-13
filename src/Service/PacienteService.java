@@ -2,25 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package service;
+package Service;
 
-import config.DatabaseConnection; 
-import dao.HistoriaClinicaDao; 
-import dao.PacienteDao;
-import entities.HistoriaClinica;
-import entities.Paciente;
+import Config.DatabaseConnection;
+import Dao.HistoriaClinicaDao; 
+import Dao.PacienteDao;
+import Models.HistoriaClinica;
+import Models.Paciente;
+import Service.GenericService.ServiceException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-// Importamos la excepción custom
-import static service.GenericService.ServiceException;
-
 public class PacienteService implements GenericService<Paciente> {
 
     // Instancias de los DAOs que va a usar
-    private PacienteDao pacienteDao;
-    private HistoriaClinicaDao historiaClinicaDao;
+    private final PacienteDao pacienteDao;
+    private final HistoriaClinicaDao historiaClinicaDao;
 
     public PacienteService() {
         this.pacienteDao = new PacienteDao();
@@ -51,7 +49,11 @@ public class PacienteService implements GenericService<Paciente> {
 
             // Operación Compuesta (Parte 1: Crear Paciente A)
             // Asumimos que el DAO devuelve el paciente con el ID generado
-            pacienteCreado = pacienteDao.crear(paciente, conn);
+            try {
+                pacienteCreado = pacienteDao.crear(paciente, conn);
+            } catch (Exception e) {
+                throw new ServiceException("Error al crear el paciente: " + e.getMessage(), e);
+            }
             
             // Operación Compuesta (Parte 2: Crear HistoriaClinica B)
             HistoriaClinica hc = paciente.getHistoriaClinica();
@@ -60,7 +62,12 @@ public class PacienteService implements GenericService<Paciente> {
             hc.setPaciente(pacienteCreado); 
 
             // Llamamos al DAO
-            HistoriaClinica hcCreada = historiaClinicaDao.crear(hc, conn);
+            HistoriaClinica hcCreada;
+            try {
+                hcCreada = historiaClinicaDao.crear(hc, conn);
+            } catch (Exception e) {
+                throw new ServiceException("Error al crear la historia clínica: " + e.getMessage(), e);
+            }
 
             // --- FIN DE LA TRANSACCIÓN (COMMIT) ---
             conn.commit();
