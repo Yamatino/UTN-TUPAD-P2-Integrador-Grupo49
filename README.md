@@ -63,7 +63,6 @@ UTN-TUPAD-P2-Integrador-Grupo49/
 │   │
 │   └── Main/
 │       ├── MainApp.java              # Aplicación principal (demo completa)
-│       └── TestConnection.java       # Test de conexión a BD
 │
 ├── database/
 │   └── schema.sql                    # Script de creación de BD
