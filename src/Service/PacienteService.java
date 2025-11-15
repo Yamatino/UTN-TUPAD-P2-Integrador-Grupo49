@@ -9,7 +9,6 @@ import Dao.HistoriaClinicaDao;
 import Dao.PacienteDao;
 import Models.HistoriaClinica;
 import Models.Paciente;
-import Service.GenericService.ServiceException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -200,6 +199,74 @@ public class PacienteService implements GenericService<Paciente> {
             return pacienteDao.leerTodos();
         } catch (Exception e) {
             throw new ServiceException("Error al obtener todos los pacientes: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Obtiene un paciente por su ID e incluye su historia clínica (si existe).
+     *
+     * @param id identificador del paciente
+     * @return paciente con la historia clínica cargada
+     * @throws ServiceException si ocurre un error
+     */
+    public Paciente getByIdConHistoria(Long id) throws ServiceException {
+        Paciente paciente = getById(id);
+        if (paciente != null) {
+            adjuntarHistoriaClinica(paciente);
+        }
+        return paciente;
+    }
+
+    /**
+     * Obtiene la lista completa de pacientes con sus historias clínicas (si
+     * existen).
+     *
+     * @return listado de pacientes
+     * @throws ServiceException si ocurre un error
+     */
+    public List<Paciente> getAllConHistoria() throws ServiceException {
+        List<Paciente> pacientes = getAll();
+        for (Paciente paciente : pacientes) {
+            adjuntarHistoriaClinica(paciente);
+        }
+        return pacientes;
+    }
+
+    /**
+     * Busca un paciente por su DNI.
+     *
+     * @param dni documento a buscar
+     * @return paciente encontrado o null
+     * @throws ServiceException si ocurre un error
+     */
+    public Paciente buscarPorDni(String dni) throws ServiceException {
+        if (dni == null || dni.trim().isEmpty()) {
+            throw new ServiceException("El DNI no puede estar vacío.");
+        }
+        try {
+            Paciente paciente = pacienteDao.buscarPorDni(dni.trim());
+            if (paciente != null) {
+                adjuntarHistoriaClinica(paciente);
+            }
+            return paciente;
+        } catch (Exception e) {
+            throw new ServiceException("Error al buscar paciente por DNI: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Verifica y adjunta la historia clínica asociada al paciente (lazy
+     * loading).
+     */
+    private void adjuntarHistoriaClinica(Paciente paciente) throws ServiceException {
+        if (paciente == null || paciente.getId() == null) {
+            return;
+        }
+        try {
+            HistoriaClinica hc = historiaClinicaDao.buscarPorPacienteId(paciente.getId());
+            paciente.setHistoriaClinica(hc);
+        } catch (Exception e) {
+            throw new ServiceException("Error al cargar la historia clínica del paciente: " + e.getMessage(), e);
         }
     }
 }
