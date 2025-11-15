@@ -62,8 +62,7 @@ UTN-TUPAD-P2-Integrador-Grupo49/
 │   │   └── PacienteService.java      # Servicio con lógica de negocio
 │   │
 │   └── Main/
-│       ├── MainApp.java              # Aplicación principal (demo completa)
-│       └── TestConnection.java       # Test de conexión a BD
+│       └── MainApp.java              # Aplicación principal (demo completa)
 │
 ├── database/
 │   └── schema.sql                    # Script de creación de BD
@@ -239,6 +238,32 @@ pstmt.setString(1, dni);
 
 ## 📝 Uso del Sistema
 
+### AppMenu (Consola Interactiva)
+
+La aplicación principal `Main.MainApp` ejecuta el **AppMenu**, un menú de consola que permite operar el sistema de forma interactiva.
+
+**Para iniciarlo:**
+```bash
+ant run
+```
+o desde NetBeans ejecutar `MainApp`.
+
+**Funciones disponibles:**
+- Crear paciente + historia clínica (transacción)
+- Listar pacientes (incluye historias asociadas)
+- Buscar paciente por ID
+- Actualizar datos del paciente y su historia
+- Eliminar paciente (borrado lógico)
+- Buscar paciente por DNI (búsqueda específica requerida)
+- Crear historia clínica para paciente existente
+- Listar / buscar / actualizar / eliminar historias clínicas
+
+**Características del menú:**
+- Validación de entradas (números, fechas, campos obligatorios)
+- IDs inexistentes y errores de BD manejados con mensajes claros
+- Conversión de opciones a mayúsculas para evitar confusiones
+- Confirmaciones de éxito o error en cada operación
+
 ### Ejemplo: Crear Paciente con Historia Clínica
 
 ```java
@@ -271,14 +296,12 @@ System.out.println("Paciente creado con ID: " + resultado.getId());
 ant run
 ```
 
-**La demo ejecuta:**
+**El AppMenu permite:**
 1. ✅ Test de conexión a MySQL
-2. ✅ Creación de paciente con historia clínica (transacción)
-3. ✅ Listado de todos los pacientes
-4. ✅ Búsqueda por ID
-5. ✅ Actualización de datos
-6. ✅ Borrado lógico
-7. ✅ Verificación del borrado
+2. ✅ Creación y actualización de pacientes e historias clínicas
+3. ✅ Búsqueda por ID y por DNI
+4. ✅ Borrado lógico de ambas entidades
+5. ✅ Manejo robusto de errores y validaciones
 
 ## 🔒 Validaciones Implementadas
 
