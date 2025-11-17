@@ -13,6 +13,8 @@ Sistema de gestión de pacientes y historias clínicas desarrollado como Trabajo
 3. Ivan Daniliuk - ivan.daniliuk@tupad.utn.edu.ar
 4. Augusto Matías Cúneo - augusto_cuneo@hotmail.com
 
+### Link de video 📺 https://youtu.be/3gS84lJrQPk
+
 ## 🏗️ Arquitectura del Proyecto
 
 El proyecto implementa una arquitectura en capas siguiendo el patrón **DAO**:
